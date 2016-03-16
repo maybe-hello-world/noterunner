@@ -7,6 +7,9 @@
 		mc:Ignorable="d"
 		Title="MainWindow" Height="350" Width="525">
 	<Grid>
-		
+		<Button x:Name="recordButton" Content="Record" HorizontalAlignment="Left" Margin="157,209,0,0" VerticalAlignment="Top" Width="75" Click="recordButton_Click"/>
+		<Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" Margin="309,209,0,0" VerticalAlignment="Top" Width="75" Click="stopButton_Click" Visibility="Hidden"/>
+		<Label x:Name="freq" Content="Label" HorizontalAlignment="Left" Margin="217,105,0,0" VerticalAlignment="Top"/>
+
 	</Grid>
 </Window>

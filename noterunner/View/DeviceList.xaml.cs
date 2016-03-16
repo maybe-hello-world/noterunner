@@ -11,7 +11,7 @@ namespace noterunner.View
 	/// </summary>
 	public partial class DeviceList : Window
 	{
-		public int selectedDevice;
+		public int selectedDevice { get; set; }
 
 		public DeviceList()
 		{

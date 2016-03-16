@@ -8,7 +8,7 @@
         Title="DeviceList" Height="300" Width="300">
 	<Grid>
 		<ListBox x:Name="DeviceListbox" HorizontalAlignment="Left" Height="195" Margin="40,31,0,0" VerticalAlignment="Top" Width="222"/>
-		<Button x:Name="select" Content="Button" HorizontalAlignment="Left" Margin="111,231,0,0" VerticalAlignment="Top" Width="75" Click="select_Click"/>
+		<Button x:Name="select" Content="OK" HorizontalAlignment="Left" Margin="111,231,0,0" VerticalAlignment="Top" Width="75" Click="select_Click"/>
 
 	</Grid>
 </Window>

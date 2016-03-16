@@ -7,10 +7,6 @@ namespace noterunner.Controller
 {
 	class MainWorker
 	{
-		public static void DeviceChosen(int inDeviceNumber)
-		{
-			SoundCapture.deviceNumber = inDeviceNumber >= 0 ? inDeviceNumber : 0;
-		}
 
 		//[STAThread]
 		public static void Main()
@@ -19,10 +15,20 @@ namespace noterunner.Controller
 
 			//Choose input device
 			View.DeviceList devWin = new View.DeviceList();
-			if (devWin.ShowDialog() == true) SoundCapture.deviceNumber = devWin.selectedDevice >= 0 ? devWin.selectedDevice : 0;
+			if (devWin.ShowDialog().Value == true) SoundCapture.deviceNumber = devWin.selectedDevice >= 0 ? devWin.selectedDevice : 0;
 
 			MainWindow mainWin = new MainWindow();
 			mainWin.ShowDialog();
+		}
+
+		public static void StartRecording()
+		{
+			SoundCapture.StartCapturing();
+		}
+
+		internal static void StopRecording()
+		{
+			SoundCapture.StopCapturing();
 		}
 	}
 }
