@@ -9,6 +9,8 @@ namespace noterunner.Controller
 	class SoundCapture
 	{
 		private const double MAX_FREQ = 3000;
+		private const int SAMPLE_RATE = 44100;
+		private const int BUFFER_MSECS = 100;
 
 		public delegate void FreqChanged(double freq);
 		public static event FreqChanged OnFreqChanged;
@@ -34,9 +36,14 @@ namespace noterunner.Controller
 			}
 		}
 
-		internal static void StopCapturing()
+		public static void StopCapturing()
 		{
-			waveSource.StopRecording();
+			if (waveSource != null)
+			{
+				waveSource.StopRecording();
+				waveSource.Dispose();
+				waveSource = null;
+			}
 		}
 
 		/// <summary>
@@ -46,7 +53,8 @@ namespace noterunner.Controller
 		{
 			waveSource = new WaveIn();
 			waveSource.DeviceNumber = deviceNumber;
-			waveSource.WaveFormat = new WaveFormat(44100, 1);
+			waveSource.BufferMilliseconds = BUFFER_MSECS;
+			waveSource.WaveFormat = new WaveFormat(SAMPLE_RATE, 1);
 
 			waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(waveSource_DataAvailable);
 			waveSource.StartRecording();
@@ -54,10 +62,10 @@ namespace noterunner.Controller
 
 		private static void waveSource_DataAvailable(object sender, WaveInEventArgs e)
 		{
-			//Model.Complex[] complexData = new Model.Complex[e.BytesRecorded];
-			Model.Complex[] complexData = new Model.Complex[8192];
-			//for (int i = 0; i < e.BytesRecorded; i++)
-			for (int i = 0; i < 8192; i++)
+			int BytesRecorded = Model.Tools.TruncToPow2(e.BytesRecorded);
+			Model.Complex[] complexData = new Model.Complex[BytesRecorded];
+
+			for (int i = 0; i < BytesRecorded; i++)
 			{
 				complexData[i] = new Model.Complex(e.Buffer[i], 0);
 			}
@@ -66,8 +74,8 @@ namespace noterunner.Controller
 			Model.FourierTransform.FFT(complexData, Model.FourierTransform.Direction.Forward);
 
 			//Находим магнитуду каждого элемента в массиве
-			//for (int i = 0; i < e.BytesRecorded / 2; i++)
-			for (int i = 0; i < 8192/2; i++)
+
+			for (int i = 0; i < BytesRecorded/2 - 1; i++)
 			{
 				complexData[i].Re = complexData[i].Magnitude;
 			}
@@ -76,9 +84,8 @@ namespace noterunner.Controller
 			//Находим индекс максимальной магнитуды в массиве
 			double max_magnitude = 0;
 			int index = 0;
-			double t_maxfreq = MAX_FREQ * 8192 / 44100;
-			//for (int i = 0; i < e.BytesRecorded / 2; i++)
-			//for (int i = 1; i < 8192 / 2 - 1; i++)
+			double t_maxfreq = MAX_FREQ * BytesRecorded / SAMPLE_RATE;
+
 			for (int i = 1; i < t_maxfreq; i++)
 			{
 				if (complexData[i].Re > max_magnitude)
@@ -89,7 +96,7 @@ namespace noterunner.Controller
 			}
 
 			//Находим частоту: freq = max_index * Fs / N (Fs = 44100, N - size of FFT)
-			max_magnitude = index * 44100 / 8192;
+			max_magnitude = index * SAMPLE_RATE / BytesRecorded;
 			OnFreqChanged(max_magnitude);
 		}
 	}

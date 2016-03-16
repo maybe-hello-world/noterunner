@@ -40,5 +40,6 @@ namespace noterunner
 			stopButton.Visibility = Visibility.Hidden;
 			recordButton.Visibility = Visibility.Visible;
 		}
+
 	}
 }

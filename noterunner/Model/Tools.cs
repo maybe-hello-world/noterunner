@@ -151,5 +151,10 @@ namespace noterunner.Model
 			}
 			return 31;
 		}
+
+		public static int TruncToPow2(int x)
+		{
+			return Pow2(Log2(x) - 1);
+		}
 	}
 }

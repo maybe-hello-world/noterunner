@@ -18,7 +18,15 @@ namespace noterunner.Controller
 			if (devWin.ShowDialog().Value == true) SoundCapture.deviceNumber = devWin.selectedDevice >= 0 ? devWin.selectedDevice : 0;
 
 			MainWindow mainWin = new MainWindow();
+			mainWin.Closed += OnWindowClosed;
 			mainWin.ShowDialog();
+
+		}
+
+		private static void OnWindowClosed(object sender, EventArgs e)
+		{
+			SoundCapture.StopCapturing();
+			Environment.Exit(0);
 		}
 
 		public static void StartRecording()
