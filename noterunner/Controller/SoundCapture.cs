@@ -23,6 +23,7 @@ namespace noterunner.Controller
 
 		/// <summary>
 		/// Initialize recording devices.
+		/// Всем привет.
 		/// </summary>
 		public static void Initialize()
 		{
